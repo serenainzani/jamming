@@ -13,26 +13,33 @@
   }
 }
 
-.App-header {
-  background-color: #282c34;
+.background {
+  background-image: url("../imgs/pattern-of-music-purple.svg");
+  background-size: 300px;
+  background-repeat: repeat;
+  /* filter: invert(1) brightness(.5); */
+}
+
+.main {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.column {
+  float: left;
+  width: 50%;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.row {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
 }

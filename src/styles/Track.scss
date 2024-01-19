@@ -1,0 +1,42 @@
+.parent {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  // grid-template-rows: ;
+  // grid-column-gap: 0px;
+  // grid-row-gap: 0px;
+}
+
+.songTitle {
+  grid-area: 1 / 1 / 2 / 4;
+  span {
+    font-size: 20px;
+  }
+}
+.songArtist {
+  grid-area: 2 / 1 / 3 / 4;
+  span {
+    font-size: 16px;
+    font-style: italic;
+  }
+}
+.addRemoveSong {
+  grid-area: 1 / 4 / 3 / 5;
+
+  button {
+    color: white;
+    background: none;
+    border: 2px solid white;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+  }
+}
+
+hr {
+  border-color: rgb(182, 132, 240);
+  border-image: linear-gradient(to right, alpha, rgb(111, 66, 163), alpha) 30;
+  width: 50%;
+}
