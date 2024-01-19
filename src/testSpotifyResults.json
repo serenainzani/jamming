@@ -1,0 +1,20 @@
+[
+    {
+        "artist": "Rick Astley",
+        "name": "Never Gonna Give You Up",
+        "album": "Whenever You Need Somebody",
+        "id": 1
+    },
+    {
+        "artist": "Ricky Martin",
+        "name": "Livin' La Vida Loca",
+        "album": "Ricky Martin",
+        "id": 2
+    },
+    {
+        "artist": "Cliff Richard",
+        "name": "Mistletoe and Wine",
+        "album": "Private Collection: 1979-1988",
+        "id": 3
+    }
+]

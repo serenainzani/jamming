@@ -4,8 +4,8 @@ import Track from "./Track";
 export default function Tracklist() {
   return (
     <>
-      <Track />
-      <Track />
+      <Track name={"temp"} artist={"temp"} id={999} symbol="-" />
+      <Track name={"temp"} artist={"temp"} id={998} symbol="-" />
     </>
   );
 }

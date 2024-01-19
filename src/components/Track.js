@@ -1,18 +1,24 @@
 import React from "react";
 import "../styles/Track.scss";
 
-export default function Track() {
+export default function Track(props) {
+  const handleClick = () => {
+    props.callBack(props.id);
+  };
+
   return (
     <>
       <div className="parent">
         <div className="songTitle">
-          <span>Song Name</span>
+          <span>{props.name}</span>
         </div>
         <div className="songArtist">
-          <span>Artist</span>
+          <span>{props.artist}</span>
         </div>
         <div className="addRemoveSong">
-          <button type="button">+</button>
+          <button type="button" onClick={handleClick}>
+            {props.symbol}
+          </button>
         </div>
       </div>
       <hr />
