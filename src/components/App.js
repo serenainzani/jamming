@@ -5,7 +5,7 @@ import Playlist from "./Playlist";
 import { useState } from "react";
 
 function App() {
-  const [results, setResults] = useState("");
+  const [results, setResults] = useState("[]");
   const [playlistTracks, setPlaylistTracks] = useState("");
 
   const handleCallBack = (childData) => {
