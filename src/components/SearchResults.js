@@ -1,55 +1,38 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Track from "./Track";
 
 export default function SearchResults(props) {
-  const results = eval(props.results);
-  let resultTracks = [];
+    const results = JSON.parse(props.results);
+    const [resultTracks, setResultTracks] = useState([]);
 
-  if (results.length > 0) {
-    for (let i = 0; i < results.length; i++) {
-      resultTracks.push(
-        <Track
-          name={results[i].name}
-          artist={results[i].artist}
-          id={results[i].id}
-          symbol="+"
-        />
-      );
-    }
-  }
+    const handleCalllback = (trackId) => {
+        setResultTracks((prevTracks) =>
+            prevTracks.filter((track) => track.key !== trackId.toString())
+        );
+    };
 
-  // const results = [];
+    useEffect(() => {
+        if (results.length > 0) {
+            const tracks = results.map((result) => (
+                <Track
+                    name={result.name}
+                    artist={result.artist}
+                    id={result.id}
+                    key={result.id}
+                    symbol="+"
+                    callback={handleCalllback}
+                />
+            ));
+            if (JSON.stringify(tracks) !== JSON.stringify(resultTracks)) {
+                setResultTracks(() => tracks);
+            }
+        }
+    }, [results]);
 
-  // const trackCallBack = (trackData) => {
-  //   tracks.pop();
-  //   alert(tracks);
-  // };
-
-  // const tracks2 = [
-  //   <Track name={"hwy"} artist={"why"} id={"jw"} callBack={"kjw"} symbol="+" />,
-  // ];
-
-  // if (tracks2.length === 0) {
-  //   alert("yes");
-  //   setTracks(JSON.parse(props.results));
-  //   for (let i = 0; i < tracks.length; i++) {
-  //     tracks2.push(
-  //       <Track
-  //         name={tracks[i].name}
-  //         artist={tracks[i].artist}
-  //         id={tracks[i].id}
-  //         callBack={trackCallBack}
-  //         symbol="+"
-  //       />
-  //     );
-  //   }
-  //   setTracks(tracks2);
-  // }
-
-  return (
-    <>
-      <h2>Results</h2>
-      {resultTracks}
-    </>
-  );
+    return (
+        <>
+            <h2>Results</h2>
+            {resultTracks}
+        </>
+    );
 }
