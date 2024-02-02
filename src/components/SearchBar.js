@@ -18,10 +18,18 @@ export default function SearchBar(props) {
     };
 
     const handleAddTrack = (track) => {
-        setPlaylistTracks((prevPlaylist) => [
-            ...prevPlaylist,
-            JSON.parse(track),
-        ]);
+        const trackParsed = JSON.parse(track);
+        const trackInPlaylist = playlistTracks.some(
+            (pTrack) => pTrack.id == trackParsed.id
+        );
+        if (!trackInPlaylist) {
+            setPlaylistTracks((prevPlaylist) => [
+                ...prevPlaylist,
+                JSON.parse(track),
+            ]);
+        } else {
+            alert(`${trackParsed.name} is already in your playlist.`);
+        }
     };
 
     const handleRemoveTrack = (track) => {
