@@ -5,22 +5,61 @@ import SearchResults from "./SearchResults";
 export default function SearchBar(props) {
     const [results, setResults] = useState("[]");
     const [playlistTracks, setPlaylistTracks] = useState([]);
+    const [userSearch, setUserSearch] = useState("");
+
+    // async function getProfile(accessToken) {
+    //     const response = await fetch("https://api.spotify.com/v1/me", {
+    //         headers: {
+    //             Authorization: "Bearer " + accessToken,
+    //         },
+    //     });
+    //     const data = await response.json();
+    //     console.log("Profile Data:", data.display_name);
+    // }
+
+    async function getTrack(accessToken, trackName) {
+        const trackNameNoSpace = trackName.replace(/ /g, "+");
+        const url = `https://api.spotify.com/v1/search?q=${trackNameNoSpace}&type=track&market=GB&limit=5&offset=0`;
+        const response = await fetch(url, {
+            headers: {
+                Authorization: "Bearer " + accessToken,
+            },
+        });
+        const data = await response.json();
+        let dataSimplified = [];
+        data.tracks.items.forEach((track) => {
+            dataSimplified.push({
+                artist: track.album.artists[0].name,
+                name: track.name, // TODO support multiple
+                album: track.album.name,
+                id: track.id,
+            });
+        });
+        setResults(() => JSON.stringify(dataSimplified));
+    }
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        let userSearchString = document.getElementById("userSearch").value;
         if (event.target.value === "") {
             setResults(() => "[]");
         } else {
-            setResults(() =>
-                JSON.stringify(require("../testSpotifyResults.json"))
-            );
+            const currentUrl = window.location.href;
+            // Have to split by # as for some reason the access token is starting with a hastag?
+            const urlParams = new URLSearchParams(currentUrl.split("#")[1]);
+            const accessToken = urlParams.get("access_token");
+            getTrack(accessToken, userSearchString);
         }
+    };
+
+    const handleChange = (event) => {
+        setUserSearch(() => event.target.value);
     };
 
     const handleAddTrack = (track) => {
         const trackParsed = JSON.parse(track);
         const trackInPlaylist = playlistTracks.some(
-            (pTrack) => pTrack.id == trackParsed.id
+            (pTrack) => pTrack.id === trackParsed.id
         );
         if (!trackInPlaylist) {
             setPlaylistTracks((prevPlaylist) => [
@@ -45,8 +84,10 @@ export default function SearchBar(props) {
             <form onSubmit={handleSubmit}>
                 <input
                     type="search"
-                    onChange={handleSubmit}
+                    onChange={handleChange}
                     placeholder="What music are you looking for?"
+                    value={userSearch}
+                    id="userSearch"
                 ></input>
                 <br />
                 <button type="submit">Submit</button>
