@@ -9,13 +9,13 @@ function generateRandomString(length) {
     return text;
 }
 
-function authoriseImplictGrantSpotify() {
+export default function authoriseImplictGrantSpotify() {
     var client_id = "7e9b1fa4e992419db57c7c003eda9e31"; // Your client id
     var redirect_uri = "http://localhost:3000"; // Your redirect uri
 
     var state = generateRandomString(16);
 
-    var scope = "user-read-private user-read-email";
+    var scope = "user-read-private playlist-modify-private";
 
     var url = "https://accounts.spotify.com/authorize";
     url += "?response_type=token";
@@ -23,9 +23,6 @@ function authoriseImplictGrantSpotify() {
     url += "&scope=" + encodeURIComponent(scope);
     url += "&redirect_uri=" + encodeURIComponent(redirect_uri);
     url += "&state=" + encodeURIComponent(state);
-
-    fetch(url);
     console.log(url);
+    window.location.href = url;
 }
-
-authoriseImplictGrantSpotify();
