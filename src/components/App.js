@@ -1,11 +1,10 @@
 import "../styles/App.scss";
 import SearchBar from "./SearchBar";
 import React from "react";
-import authoriseImplictGrantSpotify from "../authorise";
+import authoriseImplictGrantSpotify from "../scripts/authorise";
 
 function App() {
     if (window.location.href === "http://localhost:3000/") {
-        console.log("ehy");
         authoriseImplictGrantSpotify();
     }
     return (

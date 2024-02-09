@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import Tracklist from "./Tracklist";
 import Track from "./Track";
 
 export default function Playlist(props) {
-    const [name, setName] = useState("");
+    const [playListName, setPlaylistName] = useState("");
 
     const [userName, setUserName] = useState("");
     useEffect(() => {
@@ -16,9 +15,8 @@ export default function Playlist(props) {
             },
         })
             .then((response) => response.json())
-            .then((data) => setUserName(() => data.id))
-            .then(() => console.log("username", userName));
-    }, []);
+            .then((data) => setUserName(() => data.id));
+    }, [userName]);
 
     const [playlistTracks, setPlaylistTracks] = useState([]);
     useEffect(() => {
@@ -27,8 +25,21 @@ export default function Playlist(props) {
     }, [props.playlistTracks]);
 
     const handleChange = (event) => {
-        setName(() => event.target.value);
+        setPlaylistName(() => event.target.value);
     };
+
+    async function handleSubmit(event) {
+        event.preventDefault();
+        setPlaylistName(() => event.target.value);
+        const currentUrl = window.location.href;
+        const urlParams = new URLSearchParams(currentUrl.split("#")[1]);
+        const accessToken = urlParams.get("access_token");
+        const playistId = await makePlaylist(accessToken, userName);
+        await addTracks(accessToken, playistId);
+        alert(
+            `Playlist '${playListName}' has been created.\nCheck your Spotify account!`
+        );
+    }
 
     async function makePlaylist(accessToken, userName) {
         const url = `https://api.spotify.com/v1/users/${userName}/playlists`;
@@ -38,22 +49,26 @@ export default function Playlist(props) {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                name: name,
+                name: playListName,
                 description: "This playist was made via Jammming",
                 public: false,
             }),
             method: "POST",
         });
-        const content = await response.json();
 
+        const content = await response.json();
         const playlistId = content.id;
+
+        return playlistId;
+    }
+
+    async function addTracks(accessToken, playlistId) {
         const uriTrackList = playlistTracks.map(
             (track) => "spotify:track:" + track.id
         );
-        const url2 = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
-        console.log(url2);
+        const url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
 
-        const response2 = await fetch(url2, {
+        const response = await fetch(url, {
             headers: {
                 Authorization: "Bearer " + accessToken,
                 "Content-Type": "application/json",
@@ -61,21 +76,8 @@ export default function Playlist(props) {
             body: JSON.stringify({ uris: uriTrackList }),
             method: "POST",
         });
-        const content2 = await response2.json();
-        console.log(content2);
+        await response.json();
     }
-
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        // alert(`Created playlist '${name}' with the following tracks:
-        // ${playlistTracks.map((result) => result.id)}`);
-
-        const currentUrl = window.location.href;
-        const urlParams = new URLSearchParams(currentUrl.split("#")[1]);
-        const accessToken = urlParams.get("access_token");
-
-        makePlaylist(accessToken, userName);
-    };
 
     const handleCalllback = (trackId) => {
         const removedTrack = playlistTracks.filter(
@@ -90,7 +92,7 @@ export default function Playlist(props) {
             <form onSubmit={handleSubmit}>
                 <input
                     id="playlistName"
-                    name={name}
+                    name={playListName}
                     type="text"
                     placeholder="Playlist Name"
                     onChange={handleChange}
@@ -107,9 +109,9 @@ export default function Playlist(props) {
                         callback={handleCalllback}
                     />
                 ))}
-                {/* <Tracklist /> */}
-
                 <button type="submit">Save to Spotify</button>
+                <br />
+                <br />
             </form>
         </>
     );

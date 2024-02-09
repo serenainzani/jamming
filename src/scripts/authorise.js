@@ -23,6 +23,5 @@ export default function authoriseImplictGrantSpotify() {
     url += "&scope=" + encodeURIComponent(scope);
     url += "&redirect_uri=" + encodeURIComponent(redirect_uri);
     url += "&state=" + encodeURIComponent(state);
-    console.log(url);
     window.location.href = url;
 }
